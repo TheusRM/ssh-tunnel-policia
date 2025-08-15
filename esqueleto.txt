@@ -1,0 +1,27 @@
+no arquivo tunnel.sh vai ser simples
+temos o /bin/bash que chama o código bash que está executando o script
+
+#!/bin/bash
+while true
+do
+ssh -N -R servidor:porta:localhost:porta root@ip-publico
+sleep 5
+done
+
+
+na linha 7 voce percebe que ele começa chamando o ip público e porta pública do servidor que está sendo usado, logo em seguida está chamando o servidor local junto com a porta local (podendo ser um ip local de alguma outra máquina que estiver na mesma rede assim este servidor virando um firewall e redirecionando a conexão) no final fechando com o usuário e ip do servidor público para chamar a conexão 
+
+já vindo para o arquivo startup a historia fica mais simples
+
+#!/bin/bash
+screen -dmS tunnel /root/tunnel.sh
+
+na linha 17 voce percebe que é simples, bora desmembrar, onde está escrito "tunnel" é o nome do processo que o arquivo vai gerar, pode especificar mais se quiser por exemplo "tunnel80" pra especificar quando ver o processo no "ps aux"
+logo após o nome do processo fica o caminho para o arquivo do tunnel que ele vai rodar o processo sem precisar de um terminal aberto, ele pode ser mudado de acordo com onde voce criou, salvou ou copiou os arquivos
+
+
+logo após tudo isso, precisa ir no comando "crontab -e" ele vai te levar para a raiz do sistema que é de onde ele puxa as tarefas de inicialização, logo no final precisa colocar o caminho do rquivo que vai ser criado o processo de inicialização 
+
+@reboot /root/startup.sh
+
+onde está "/root/startup.sh" voce coloca o caminho de onde está o arquivo de startup.sh pois é ele quem precisa ser incializado, o arquivo tunnel não precisa ser mexido pois o próprio arquivo startuo faz isso
